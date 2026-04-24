@@ -1,34 +1,49 @@
-import Link from "next/link";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { getAuthCookieName, verifyAuthToken } from "@/lib/auth";
+import { connectToDatabase } from "@/lib/mongodb";
+import { User } from "@/models/User";
+import DashboardClient from "./dashboard-client";
 
-export default function DashboardPage() {
-  return (
-    <main className="flex min-h-screen items-center justify-center px-4 py-12">
-      <section className="w-full max-w-2xl rounded-[2rem] border border-white/10 bg-white/95 p-10 text-slate-900 shadow-2xl shadow-cyan-950/20 backdrop-blur">
-        <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-600">
-          ChatApp Dashboard
-        </p>
-        <h1 className="mt-4 text-4xl font-semibold tracking-tight">
-          Welcome to ChatApp
-        </h1>
-        <p className="mt-4 max-w-xl text-base leading-7 text-slate-600">
-          This is a simple placeholder dashboard for the chat application.
-        </p>
+export default async function DashboardPage() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(getAuthCookieName())?.value;
 
-        <div className="mt-8 flex flex-wrap gap-3 text-sm font-medium">
-          <Link
-            href="/login"
-            className="rounded-full bg-slate-950 px-5 py-3 text-white transition hover:bg-cyan-600"
-          >
-            Back to login
-          </Link>
-          <Link
-            href="/signup"
-            className="rounded-full border border-slate-200 px-5 py-3 text-slate-700 transition hover:border-cyan-500 hover:text-cyan-700"
-          >
-            Go to signup
-          </Link>
-        </div>
-      </section>
-    </main>
-  );
+  if (!token) {
+    redirect("/login");
+  }
+
+  let username = "User";
+  let userId = "";
+
+  try {
+    const authToken = verifyAuthToken(token);
+    username = authToken.username;
+    userId = authToken.userId;
+  } catch {
+    redirect("/login");
+  }
+
+  await connectToDatabase();
+
+  const user = await User.findById(userId).populate({
+    path: "friends",
+    select: "username email",
+  });
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  const friends = (user.friends as unknown as Array<{
+    _id: { toString: () => string };
+    username: string;
+    email: string;
+  }>).map((friend) => ({
+    id: friend._id.toString(),
+    username: friend.username,
+    email: friend.email,
+  }));
+
+  return <DashboardClient username={user.username} friends={friends} />;
 }

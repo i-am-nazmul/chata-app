@@ -1,9 +1,10 @@
-import mongoose, { Schema, type Model } from "mongoose";
+import mongoose, { Schema, type Model, type Types } from "mongoose";
 
 export interface IUser {
   username: string;
   email: string;
   password: string;
+  friends: Types.ObjectId[];
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -26,6 +27,15 @@ const userSchema = new Schema<IUser>(
     password: {
       type: String,
       required: true,
+    },
+    friends: {
+      type: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+        },
+      ],
+      default: [],
     },
   },
   {
