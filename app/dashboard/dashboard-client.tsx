@@ -610,17 +610,17 @@ export default function DashboardClient({ username, userId, friends }: Dashboard
           ) : null}
         </section>
 
-        <section className="flex flex-col overflow-hidden rounded-[1.75rem] border border-slate-200/80 bg-white p-5 text-slate-900 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-sm">
-          <div className="flex items-start justify-between gap-4 border-b border-slate-200 pb-4">
+        <section className="flex flex-col overflow-hidden rounded-[1.75rem] border border-slate-200/80 bg-purple-600 p-5 text-slate-900 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-sm">
+          <div className="flex items-start justify-between gap-4 border-b border-purple-400 pb-4">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500">
+              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-purple-200">
                 Conversation
               </p>
-              <h2 className="mt-2 text-lg font-semibold text-slate-950">
+              <h2 className="mt-2 text-lg font-semibold text-white">
                 {selectedFriend ? selectedFriend.username : "Select a friend"}
               </h2>
               {!selectedFriend ? (
-                <p className="mt-1 text-xs text-slate-500">Your messages will appear here</p>
+                <p className="mt-1 text-xs text-purple-200">Your messages will appear here</p>
               ) : null}
             </div>
           </div>
@@ -628,10 +628,10 @@ export default function DashboardClient({ username, userId, friends }: Dashboard
           <div className="mt-4 flex-1 space-y-3 overflow-auto pr-1 hide-scrollbar">
             {selectedFriend ? (
               isHistoryLoading ? (
-                <div className="flex h-full items-center justify-center rounded-3xl border border-dashed border-slate-200 bg-slate-50 px-6 py-10 text-center text-sm text-slate-500">
+                <div className="flex h-full items-center justify-center rounded-3xl border border-dashed border-purple-300 bg-purple-500 px-6 py-10 text-center text-sm text-purple-200">
                   <div className="flex flex-col items-center gap-3">
                     <span
-                      className="h-8 w-8 animate-spin rounded-full border-2 border-slate-300 border-t-slate-900"
+                      className="h-8 w-8 animate-spin rounded-full border-2 border-purple-300 border-t-white"
                       aria-label="Loading messages"
                     />
                     <span>Loading previous messages...</span>
@@ -647,12 +647,12 @@ export default function DashboardClient({ username, userId, friends }: Dashboard
                         <div
                           className={`max-w-[80%] rounded-3xl px-4 py-3 text-sm shadow-sm ${
                             isMine
-                              ? "rounded-br-md bg-slate-950 text-white"
-                              : "rounded-bl-md border border-slate-200 bg-white text-slate-900"
+                              ? "rounded-br-md bg-black text-white"
+                              : "rounded-bl-md border border-white bg-white text-black"
                           }`}
                         >
                           <p>{message.content}</p>
-                          <p className={`mt-2 text-[11px] ${isMine ? "text-slate-300" : "text-slate-500"}`}>
+                          <p className={`mt-2 text-[11px] ${isMine ? "text-slate-300" : "text-slate-600"}`}>
                             {new Date(message.createdAt).toLocaleTimeString([], {
                               hour: "2-digit",
                               minute: "2-digit",
@@ -666,21 +666,21 @@ export default function DashboardClient({ username, userId, friends }: Dashboard
                 </>
 
               ) : (
-                <div className="flex h-full items-center justify-center rounded-3xl border border-dashed border-slate-200 bg-slate-50 px-6 py-10 text-center text-sm text-slate-500">
+                <div className="flex h-full items-center justify-center rounded-3xl border border-dashed border-purple-300 bg-purple-500 px-6 py-10 text-center text-sm text-purple-200">
                   Messages for {selectedFriend.username} will appear here once the socket sends them.
                 </div>
               )
             ) : (
-              <div className="flex h-full items-center justify-center rounded-3xl border border-dashed border-slate-200 bg-slate-50 px-6 py-10 text-center text-sm text-slate-500">
+              <div className="flex h-full items-center justify-center rounded-3xl border border-dashed border-purple-300 bg-purple-500 px-6 py-10 text-center text-sm text-purple-200">
                 Choose a friend from the left panel to open a chat session.
               </div>
             )}
           </div>
 
           {selectedFriend ? (
-            <div className="mt-4 border-t border-slate-200 pt-4">
+            <div className="mt-4 border-t border-purple-400 pt-4">
               {chatErrorByPeer[selectedFriend.id] ? (
-                <p className="mb-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-700">
+                <p className="mb-3 rounded-2xl border border-red-300 bg-red-500 px-4 py-3 text-xs text-white">
                   {chatErrorByPeer[selectedFriend.id]}
                 </p>
               ) : null}
@@ -690,21 +690,21 @@ export default function DashboardClient({ username, userId, friends }: Dashboard
                   value={draftMessage}
                   onChange={(event) => setDraftMessage(event.target.value)}
                   placeholder="Type a message..."
-                  className="flex-1 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-slate-400"
+                  className="flex-1 rounded-2xl border border-white bg-white px-4 py-3 text-sm text-black outline-none placeholder:text-slate-400 focus:border-white"
                 />
                 <button
                   type="submit"
-                  className="rounded-2xl border border-slate-200 bg-slate-950 px-5 py-3 text-sm font-medium text-white transition hover:border-slate-300 hover:bg-slate-800"
+                  className="rounded-2xl border border-white bg-black px-5 py-3 text-sm font-medium text-white transition hover:border-purple-300 hover:bg-slate-800"
                 >
                   Send
                 </button>
               </form>
-              <p className="mt-2 text-xs text-slate-500">
+              <p className="mt-2 text-xs text-purple-200">
                 Socket.IO connects only when you send the first message for this chat.
               </p>
             </div>
           ) : (
-            <div className="mt-4 border-t border-slate-200 pt-4 text-xs text-slate-500">
+            <div className="mt-4 border-t border-purple-400 pt-4 text-xs text-purple-200">
               Select a friend to enable chat.
             </div>
           )}
