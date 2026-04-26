@@ -699,9 +699,6 @@ export default function DashboardClient({ username, userId, friends }: Dashboard
                   Send
                 </button>
               </form>
-              <p className="mt-2 text-xs text-purple-200">
-                Socket.IO connects only when you send the first message for this chat.
-              </p>
             </div>
           ) : (
             <div className="mt-4 border-t border-purple-400 pt-4 text-xs text-purple-200">
